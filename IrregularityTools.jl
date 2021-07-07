@@ -43,7 +43,7 @@ function img_hist(I)
     return float.(channelview(collect(keys(A)))), collect(values(A))
 end
                        
-function irregularity_global2(I,J,method="JuMP",epsilon=1.e-3,p=1)
+function irregularity_distances(I,J,method="JuMP",epsilon=1.e-3,p=1)
     if p==2
         cost = sum((channelview(float.(I))-channelview(float.(J))).^2)
         metric = SqEuclidean()
@@ -95,7 +95,7 @@ function irregularity_global(I,J,method="JuMP",epsilon=1.e-3,p=1)
     else
         println("Global irregularity index computed using "*method*" (with epsilon = "*string(epsilon)*" and p = "*string(p)*")")
     end
-    distances = irregularity_global2(I,J,method,epsilon,p)                    
+    distances = irregularity_distances(I,J,method,epsilon,p)                    
     if distances[2]>0
         if p==2
             return 1-sqrt(distances[1]/distances[2])
@@ -122,19 +122,19 @@ function irregularity_local(I,J,Wsize = 16,method="sinkhorn_stabilized",epsilon=
     indI = 1+Wsize*(M-1):size(I)[1]
     for j=1:N-1
         indJ = 1+Wsize*(j-1):Wsize*j
-        distances += irregularity_global2(I[indI,indJ],J[indI,indJ],method,epsilon,p)
+        distances += irregularity_distances(I[indI,indJ],J[indI,indJ],method,epsilon,p)
     end
     indJ = 1+Wsize*(N-1):size(I)[2]
-    distances += irregularity_global2(I[indI,indJ],J[indI,indJ],method,epsilon,p)  
+    distances += irregularity_distances(I[indI,indJ],J[indI,indJ],method,epsilon,p)  
     # Let's now compute the other values!
     @showprogress for i=1:M-1
         indI = 1+Wsize*(i-1):Wsize*i
         for j=1:N-1
             indJ = 1+Wsize*(j-1):Wsize*j
-            distances += irregularity_global2(I[indI,indJ],J[indI,indJ],method,epsilon,p)
+            distances += irregularity_distances(I[indI,indJ],J[indI,indJ],method,epsilon,p)
         end
         indJ = 1+Wsize*(N-1):size(I)[2]
-        distances += irregularity_global2(I[indI,indJ],J[indI,indJ],method,epsilon,p)
+        distances += irregularity_distances(I[indI,indJ],J[indI,indJ],method,epsilon,p)
     end
     if distances[2]>0
         if p==2
