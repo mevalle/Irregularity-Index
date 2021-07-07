@@ -50,3 +50,4 @@ Alternatively, the optimal transport can be solved analytically using JuMP + Clp
 local_irregularity(I,J,W,"JuMP")
 ```
 
+### See examples in the Jupyter notebook files!
