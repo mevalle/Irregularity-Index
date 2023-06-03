@@ -51,3 +51,5 @@ local_irregularity(I,J,W,"JuMP")
 ```
 
 ### See examples in the Jupyter notebook files!
+
+### There is also a Jupyter notebook showing how to compute the global irregularity index in python!
